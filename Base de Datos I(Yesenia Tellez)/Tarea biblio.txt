@@ -1,0 +1,52 @@
+-- CRAR BASE DE DATOS
+CREATE DATABASE Biblioteca;
+USE Biblioteca;
+-- Tabla Editorial
+CREATE TABLE Editorial(
+id_editorial INT auto_increment primary KEY,
+nombre VARCHAR (100) NOT NULL,
+pais VARCHAR (50)
+ );
+
+-- Tabla categoria 
+CREATE TABLE Categoria(
+id_categoria INT auto_increment primary KEY,
+nombre  VARCHAR(100) NOT NULL,
+descripcion  VARCHAR(255)
+);
+
+-- Tabla Autores
+CREATE TABLE Autores (
+id_autor INT auto_increment primary key,
+nombre VARCHAR(100) NOT NULL,
+nacionalidad VARCHAR(50)
+);
+
+-- Tabla Libro
+CREATE TABLE libro (
+id_libro INT auto_increment primary key,
+titulo VARCHAR(150),
+anio_pubicacion year,
+id_editorial INT,
+id_categoria INT,
+foreign key(id_editorial)references Editorial(id_editorial)
+on delete set null
+on update cascade,
+foreign key(id_categoria)references Categoria(id_categoria)
+on delete set null
+on update cascade
+);
+
+-- Tabla intermedia Autor_LIbro (muchos a muchos)
+CREATE TABLE Autor_Libro(
+id_autor int,
+id_libro int,
+primary key(id_autor, id_libro),
+foreign key(id_autor) references Autores (id_autor)
+on delete cascade
+on update cascade,
+foreign key(id_libro) references Libro (id_libro)
+on update cascade
+on delete cascade
+);
+
