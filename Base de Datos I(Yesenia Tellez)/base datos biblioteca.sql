@@ -8,6 +8,11 @@ nacionalidad varchar(100)
  );
  
  -- Tabla bibliotecario
+ -- perfiles
+ alter table 
+ bibliotecario
+ rename to
+ perfiles;
  CREATE TABLE Bibliotecario(
  id_bibliotecario int auto_increment primary key,
  nombre varchar(100),
@@ -15,7 +20,7 @@ nacionalidad varchar(100)
  contraseña int,
  rol varchar(100) 
  );
- 
+ select * from perfiles;
  -- Taabla categoria
  CREATE TABLE Categoria(
  id_categoria int auto_increment primary key,
@@ -26,7 +31,7 @@ nacionalidad varchar(100)
  CREATE TABLE Editorial (
  id_editorial int auto_increment primary key,
  nombre varchar(100),
- pais varchar(50));
+ pais varchar(50)); 
  
  -- Tabla Usuario
 CREATE TABLE Usuario (
@@ -37,9 +42,9 @@ CREATE TABLE Usuario (
     seccion VARCHAR(50),
     año VARCHAR(20)
 );
-
+select e.nombre as Usuario,
+       e.titulo as Libro;
 -- Tabla Libro
-
  CREATE TABLE Libro(
  id_libro int auto_increment primary key,
  titulo varchar(100) not null,
@@ -69,7 +74,6 @@ on delete cascade
 );
 
 -- Tabla de prestamos
-
  CREATE TABLE Prestamo (
     id_prestamo INT AUTO_INCREMENT PRIMARY KEY,
     id_usuario INT,
@@ -78,7 +82,6 @@ on delete cascade
     fecha_devolucion DATE NOT NULL,
     fecha_real_devolucion DATE,
     estado ENUM('activo', 'devuelto', 'retrasado') DEFAULT 'activo',
-
 FOREIGN KEY (id_usuario) REFERENCES Usuario(id_usuario)
 on delete cascade
 on update cascade,
@@ -92,10 +95,8 @@ id_detalle INT AUTO_INCREMENT PRIMARY KEY,
 id_prestamo INT,
 id_libro INT,
 cantidad INT,
-
 FOREIGN KEY (id_prestamo) REFERENCES Prestamo(id_prestamo)
 ON DELETE CASCADE,
-
 FOREIGN KEY (id_libro) REFERENCES Libro(id_libro)
 );
   
@@ -119,8 +120,6 @@ id_prestamo int,
 ('Pedro Gomez', '88880005', 'profesor', NULL, NULL),
 ('Laura Diaz', '88880006', 'profesor', NULL, NULL),
 ('Miguel Castro', '88880007', 'director', NULL, NULL);
-
-
 
 -- Insertar datos en la tabla autor
 INSERT INTO autor (nombre,nacionalidad) values
@@ -161,7 +160,33 @@ AND a1.id_autor > a2.id_autor;
 ('Lucía Gómez', 'lucia.gomez@yahoo.com', 6666, 'profesor'),
 ('Pedro Ruiz', 'pedro.ruiz@hotmail.com', 7777, 'bibliotecario'),
 ('Valeria Castro', 'valeria.castro@gmail.com', 8888, 'profesor');
- 
+
+INSERT INTO perfiles(apellido)values
+('Mendoza'),
+('Lopez'),
+('Martinez'),
+('Torrez'),
+('Ramirez'),
+('Perez'),
+('Castillo'),
+('herrera'),
+('Vargas'),
+('Gomez'),
+('Ruiz'),
+('Castro');
+UPDATE perfiles  SET apellido = 'Mendoza' WHERE id_perfiles = 1;
+UPDATE perfiles SET apellido = 'López' WHERE id_perfiles = 2;
+UPDATE perfiles SET apellido = 'Martínez' WHERE id_perfiles = 3;
+UPDATE perfiles SET apellido = 'Torres' WHERE id_perfiles = 4;
+UPDATE perfiles a SET apellido = 'Ramírez' WHERE id_perfiles = 5;
+UPDATE perfiles SET apellido = 'Pérez' WHERE id_perfiles = 6;
+UPDATE perfiles SET apellido = 'Castillo' WHERE id_perfiles = 7;
+UPDATE perfiles SET apellido = 'Herrera' WHERE id_perfiles = 8;
+UPDATE perfiles SET apellido = 'Vargas' WHERE id_perfiles = 9;
+UPDATE perfiles SET apellido = 'Gómez' WHERE id_perfiles = 10;
+UPDATE perfiles  SET apellido = 'Ruiz' WHERE id_perfiles = 11;
+UPDATE perfiles SET apellido = 'Castro' WHERE id_perfiles = 12;
+select*from perfiles;
  -- Insercion de datos de la tabla editorial
  INSERT INTO editorial(nombre,pais)values
  ('Planeta', 'España'),
@@ -235,44 +260,14 @@ VALUES
 (1, 7, '2026-05-04', '2026-05-14', NULL,         'activo'),
 (3, 9, '2026-05-05', '2026-05-15', NULL,         'activo');
 
-INSERT INTO DetallePrestamo (id_prestamo, id_libro, cantidad) VALUES
--- Prestamo 1
-(1, 1, 1),
-(1, 2, 1),
+alter table pretamos
+rename id_bibliotecario ;
 
--- Prestamo 2
-(2, 3, 1),
 
--- Prestamo 3
-(3, 4, 1),
-(3, 5, 1),
-
--- Prestamo 4
-(4, 6, 1),
-
--- Prestamo 5
-(5, 7, 1),
-(5, 8, 1),
-
--- Prestamo 6
-(6, 9, 1),
-
--- Prestamo 7
-(7, 10, 1),
-
--- Prestamo 8
-(8, 11, 1),
-(8, 12, 1),
-
--- Prestamo 9
-(9, 2, 1),
-
--- Prestamo 10
-(10, 3, 1),
-(10, 4, 1);
 
 select * from detalleprestamo;
 select *from prestamo;
+
 INSERT INTO reporte (fecha_inicio, fecha_fin, id_prestamo) VALUES
 ('2026-04-10', '2026-04-18', 1),
 ('2026-04-15', '2026-04-28', 2),
@@ -284,3 +279,54 @@ INSERT INTO reporte (fecha_inicio, fecha_fin, id_prestamo) VALUES
 ('2026-05-03', '2026-05-13', 8),
 ('2026-05-04', '2026-05-14', 9),
 ('2026-05-05', '2026-05-15', 10);
+
+UPDATE editorial set pais='Mexico' where id_editorial=1;
+select*from editorial;
+select * from autor;
+select *from autoperfilesr_libro;
+select * from bibliotecario;
+select *from categoria;
+select * from libro;
+select *from prestamo;
+select *from reporte;
+
+select *from detalleprestamo;
+
+alter table prestamo
+rename column id_bibliotecario to id_perfiles;
+
+select*from perfiles;
+
+ 
+
+select *from prestamo;
+
+alter table prestamo add id_libro int;
+ALTER TABLE prestamo
+MODIFY COLUMN id_libro INT
+AFTER id_perfiles;
+
+select L.id_libro,
+	   L.titulo,
+	from libro l
+        sum(p.id_libro) as total_prestamos
+        from prestamos
+       
+       SELECT 
+    l.titulo AS libro,
+    SUM(dp.cantidad) AS total_prestado
+FROM detalleprestamo dp
+INNER JOIN libro l ON dp.id_libro = l.id_libro
+GROUP BY l.id_libro, l.titulo
+ORDER BY total_prestado DESC
+LIMIT 1;
+
+select L.id_libro,
+L.titulo,
+a.nombre
+from libro L
+inner join autor_libro al
+on L.id_libro =  al.id_libro
+inner join autor a
+on al.id_autor=a.id_autor;
+
